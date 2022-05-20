@@ -1,0 +1,169 @@
+% ----
+% COMP1204 CW2 Report Document
+% ----
+\documentclass[]{article}
+
+% Reduce the margin size, as they're quite big by default
+\usepackage[margin=1in]{geometry}
+\usepackage{setspace}
+\usepackage{amsmath}
+\usepackage{color}
+
+
+\title{COMP1204: Data Management \\ Coursework Two: COVID-19 Coronavirus Data }
+% Update these!
+\author{Wei\_Guo \\ 33331626}
+\date{May/9/2022}
+
+% Actually start the report content
+\begin{document}
+	% Add title, author and date info
+	\begin{titlepage}
+		
+		\maketitle
+		\section{The Relational Model}
+		    \subsection{EX1}
+		    In this subsection, the datatype will be displayed for every column title according to the file of the dataset.csv.
+                \begin{align}
+　              dataset.csv( &TEXT: dateRep,\\ &INTEGER: day,\\& INTEGER: month,\\& INTEGER: year,\\& INTEGER: cases,\\& INTEGER:                 deaths,\\& TEXT: countriesAndTerritories,\\& TEXT: geoId,\\& TEXT: countryterritoryCode,\\& INTEGER: popData2020,\\& TEXT: continentExp\\&)
+　             \end{align}
+		    \subsection{EX2}
+		   At here, the minimal set of Functional Dependencies will be shown.\\
+		   \{day, month, year\} → \{dateRep\}\qquad\qquad\qquad\qquad
+		   \qquad\{countriesAndTerritories, dateRep\} → \{cases\}\\
+		   \{geoId, dateRep\} → \{cases\}\qquad\qquad\qquad\qquad\qquad
+		   \qquad\{countryterritoryCode, dateRep\} → \{cases\}\\
+		   \{countriesAndTerritories, dateRep\} → \{deaths\}\qquad
+		   \qquad\{geoId, dateRep\} → \{deaths\}\\
+		   \{countryterritoryCode, dateRep\} → \{deaths\}\qquad
+		   \qquad\{countryterritoryCode\} → \{popData2020\}\\
+		   \{geoId\} → \{countriesAndTerritories\}\qquad\qquad\qquad
+		   \qquad\{countryterritoryCode\} → \{countriesAndTerritories\}\\
+		   \{countriesAndTerritories\} → \{continentExp\}\qquad\qquad
+		   \qquad\{geoId\} → \{continentExp\}\\
+		   \{countryterritoryCoder\} → \{continentExp\}
+		    \subsection{EX3}
+		    This subsection show the all potential candidate keys, these are:\\ \{dateRep, countriesAndTerritories\},\\ \{dateRep, geoId\},\\\{dateRep, countryterritoryCode\}
+		    \subsection{EX4}
+		    Here, the primary key will be set, that is \{dateRep, countriesAndTerritories\}
+		
+		\section{Normalisation} 
+		    \subsection{EX5}
+		    The original table was broken and be set table one \{dateRepresentation\}, table two \{countriesAndTerritories\}, and retain the original undecomposed data.\\ To be specific, the context of the dateRepresentation is composed of the column of day, month, year. Beside, the context of the countriesAndTerritories is composed of the column of geoId, countryterritoryCode, popData2020 and continentExp. And finally, the retain context of the original undecomposed data are composed of the column  dateRep, cases, deaths countriesAndTerritories .\\
+		    Then i drawed a buleprint to show:\\
+		    Date(dateRep, day, month, year)\\
+            Country(countriesAndTerritories, geoId, countryterritoryCode, popData2020 and continentExp)\\
+            COVID-19 Coronavirus Data( dateRep, cases, deaths countriesAndTerritories  ).
+		    \subsection{EX6}
+		    The relation of the 2FN will be displayed in EX6.\\
+		     \begin{align}
+		    Date(\qquad&TEXT: dateRep,\\ &INTEGER: day,\\&INTEGER: month,\\&INTEGER: year\\)\\
+		    Country(\qquad&TEXT: countriesAndTerritories,\\&TEXT: geoId,\\&TEXT: countryterritoryCode,\\&TEXT: continentExp\\&INTEGER: popData2020\\)\\
+		    CoronavirusData(\qquad&TEXT: dateRep,\\&INTEGER: cases,\ \&INTEGER: deaths,\\&TEXT: countriesAndTerritories\\)\\
+             \end{align}
+             I set dateRep and countriesAndTerritories are foreign key to together build CoronavirusData, and also we can see the column of the dateRep and the countriesAndTerritories are Compound primary key in CoronavirusData.
+		    \subsection{EX7}
+		    According the existing table, the transitive dependencies will be taken, these are:\\
+		    countryterritoryCode → popData2020\\
+		    Explain: the field of the popData2020 are not dependent on the key(countriesAndTerritories), so the transitive dependency should be countryterritoryCode → popData2020
+		    \subsection{EX8}
+		        \begin{align}
+		    Country(\qquad&TEXT: countriesAndTerritories,\\&TEXT: geoId, \\&TEXT: countryterritoryCode\\)\\
+		    The_Number_Of_People(\qquad&TEXT: countryterritoryCode, \\&INTEGER: popData2020\\)\\
+		    Date(\qquad&TEXT: dateRep,\\ &INTEGER: day,\\&INTEGER: month,\\&INTEGER: year\\)\\
+		    CoronavirusData(\qquad&TEXT: dateRep,\\&INTEGER: cases,\\&INTEGER: deaths,\\&TEXT: countriesAndTerritories\\)\\
+		        \end{align}
+		    Explain: I set countryterritoryCode as a foreign key to dependent popData2020.
+		    \subsection{EX9}
+            My relations suit Boyce-Codd Normal Form.\\
+            The construction is Country, The_Number_Of_People, Date, CoronavirusData.
+		\section{Modelling}
+		    \subsection{EX10}
+		    In this section, i import the raw dataset into SQLite into a single table, and it named coronavirus.db, then i attached to the specific code in below\\
+		        \begin{align}
+		    CREATE TABLE dataset (\qquad&"dateRep" TEXT,\\&"day" INTEGER, \\&"month" INTEGER, \\&"year" INTEGER,\\&"cases" INTEGER, \\&"deaths" INTEGER,\\&"countriesAndTerritories" TEXT, \\&"geoId" TEXT, \\&"countryterritoryCode" TEXT, \\&"popData2020" INTEGER, \\&"continentExp" TEXT\\);\\
+		        \end{align}
+		    Next step, i dumped the entire database as dataset.sql.
+		    \subsection{EX11}
+		    The main task in here is to create the full normalised representation, including all additional tables (with correct types) with no data and excluding the dataset table.
+		    In here, i set dateRep, countriesAndTerritories as a Foreign Key, and they are represented the Primary Key as well. And, the column of the countryterritoryCode and popData2020 are allocated to countryterritoryCode, a Foreign Key in the table of Country.
+		    \newpage
+		        \begin{align}
+		    CREATE TABLE Country(\ &countriesAndTerritories TEXT PRIMARY KEY NOT NULL,\\&geoId TEXT NOT NULL,\\&countryterritoryCode TEXT NOT NULL,\\&continentExp TEXT NOT NULL,\\&\ FOREIGN KEY (countryterritoryCode) REFERENCES \\
+		    &@TheNumberOfPeople(countryterritoryCode)\\ &@\ ON\ UPDATE\ CASCADE\ ON \ DELETE\ SET\ NULL\\);\\
+		    CREATE TABLE TheNumberOfPeople(\qquad&countryterritoryCode TEXT PRIMARY KEY NOT NULL,\\&popData2020 INTEGER NOT NULL\\);\\
+		    CREATE TABLE Date(\qquad&dateRep TEXT PRIMARY KEY NOT NULL,\\&day INTEGER NOT NULL,\\&month INTEGER NOT NULL,\\&year INTEGER NOT NULL\\);\\
+            CREATE TABLE CoronavirusData(\qquad&dateRep TEXT NOT NULL,\\&cases INTEGER NOT NULL,\\&deaths INTEGER NOT NULL,\\&countriesAndTerritories TEXT NOT NULL,\\&FOREIGN KEY (dateRep) REFERENCES Date(dateRep)\\ &@ ON UPDATE CASCADE ON DELETE SET NULL,\\&FOREIGN KEY (countriesAndTerritories)\\ &@REFERENCES Country(countriesAndTerritories)\\ &@ON UPDATE CASCADE ON DELETE SET NULL,\\&PRIMARY\qquad KEY (dateRep, countriesAndTerritories)\\);\\
+		        \end{align}
+		\textcolor{red}{The sign "@" represents to pick up the above content.}
+		    \subsection{EX12}
+		    Here, in order to insert the context, i use INSERT statements and using SELECT to populate the new tables from the 'dataset' table.
+		   \newpage
+		    (1)\\INSERT INTO CoronavirusData (\ dateRep, cases, deaths, countriesAndTerritories)\\
+		    SELECT dateRep,cases,deaths,countriesAndTerritories\\
+		    FROM dataset;\\
+		    
+		    (2)\\INSERT INTO Country (\ countriesAndTerritories ,geoId, countryterritoryCode, continentExp)\\
+		    SELECT DISTINCT countriesAndTerritories, geoId, countryterritoryCode, continentExp\\
+		    FROM dataset;\\
+		    
+		    (3)\\INSERT INTO Date (dateRep, day, month, year)\\
+		    SELECT DISTINCT dateRep, day, month, year\\
+		    FROM dataset;\\
+		    
+		    (4)\\INSERT INTO TheNumberOfPeople (countryterritoryCode,popData2020)\\
+		    SELECT DISTINCT countryterritoryCode,popData2020\\
+		    FROM dataset;\\
+		    
+		    (5)\\DELETE FROM CoronavirusData where countriesAndTerritories = 'countriesAndTerritories';\\
+		    DELETE FROM Country where  countriesAndTerritories = 'countriesAndTerritories';\\
+		    DELETE FROM Date where  dateRep = 'dateRep';\\
+		    DELETE FROM TheNumberOfPeople where\\ countryterritoryCode = 'countryterritoryCode';
+		    \subsection{EX13}
+		    In here, the main task is to test and ensure that on a clean SQLite database.
+		\section{Querying}
+		    \subsection{EX14}
+		    The worldwide total number of cases and deaths\\
+		    SELECT sum(cases)  AS TotalCases FROM CoronavirusData;\\
+            SELECT sum(deaths) AS TotalDeaths FROM CoronavirusData;\\
+
+		    \subsection{EX15}
+		    The number of cases and the date, by increasing date order, for the United Kingdom\\
+            SELECT cases, dateRep, day, month, year,countriesAndTerritories\\
+            FROM dataset\\
+            WHERE countriesAndTerritories LIKE 'United_Kingdom'\\
+            ORDER BY year ASC , month ASC , day ASC\\
+            
+		    \subsection{EX16}
+		    The number of cases, deaths and the date, by increasing date order, for each continent\\
+            SELECT Country . continentExp AS Continent,cases, deaths,Date.dateRep, year, month, day\\
+            FROM Country, CoronavirusData, Date\\
+
+		    \subsection{EX17}
+		    The number of cases and deaths as a percentage of the population, for each country\\
+            SELECT countriesAndTerritories as country,\\
+            CAST(sum(cases)AS double) *100 / CAST(sum(popData2020)AS double)*100  as thePercentCases,\\
+            CAST(sum(deaths)AS double) *100 / CAST(sum(popData2020)AS double)*100 as thePercentDeaths\\
+            FROM dataset\\
+            GROUP BY countriesAndTerritories;\\
+            
+		    \subsection{EX18}
+		     A descending list of the the top 10 countries, by percentage deaths out of cases\\
+		    COMMAND:\\
+            SELECT countriesAndTerritories AS country,\\
+            CAST(sum(cases)AS double) *100 / CAST(sum(popData2020)AS double)*100  as thePercentCases,\\
+            CAST(sum(deaths)AS double) *100 / CAST(sum(popData2020)AS double)*100 as thePercentDeaths\\
+            FROM dataset\\
+            GROUP BY countriesAndTerritories LIMIT 10;\\
+            
+		    \subsection{EX19}
+		    The date against a cumulative running total of the number of deaths by day and cases by day for the united kingdom\\
+            COMMAND:\\
+            SELECT sum(day) AS Date,sum(deaths) AS TotalDeaths,sum(cases) AS TotalCases\\
+            FROM dataset\\
+            WHERE countriesAndTerritories LIKE 'United_Kingdom'
+		\section{Extension}
+		    \subsection{EX20}
+	\end{titlepage}
+	%
+\end{document}
